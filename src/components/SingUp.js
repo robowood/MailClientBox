@@ -3,9 +3,12 @@ import { useState ,Fragment} from 'react'
 import './singUp.css';
 import { Link } from 'react-router-dom';
 import { Card, Col, Container, Row,Form, Button } from 'react-bootstrap'
-
+import { redirect } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { authAction } from './storeRedux/authReducer';
 function SingUp() {
 
+    const dispatch=useDispatch();
     const [email,setEmail]=useState('');
     const [password,setPassword]=useState('');
     const [confPassword,setConfPassword]=useState('');
@@ -56,6 +59,10 @@ if(!signUp.ok){
 }else{
     localStorage.setItem('token',data.idToken)
     console.log('sign up successfully');
+    localStorage.setItem('email',email.replace(/[@.]/g,''))
+    dispatch(authAction.login())
+
+    
 }
 }
 
