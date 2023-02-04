@@ -62,7 +62,7 @@ if(!signUp.ok){
     localStorage.setItem('token',data.idToken)
     console.log('successful');
 
-    localStorage.setItem('email',email.replace(/[@.]/g,''));
+    localStorage.setItem('email',email);
     navigate('/',{replace:true});
  
     console.log('successful');

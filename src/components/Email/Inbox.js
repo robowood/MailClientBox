@@ -6,13 +6,13 @@ import classes from './Inbox.module.css'
 const Inbox = () => {
     const dispatch=useDispatch();
     const mailInInbox=useSelector(state=>state.mail.mails);
-    const myEmail=localStorage.getItem('email').replace(/['@','.']/g,'');
+    const myEmail=localStorage.getItem('email');
 
     let data=[];
 
     useEffect(()=>{
         const fetchDaata=async()=>{
-            const reponse=await fetch(`https://book-search-app-62511-default-rtdb.firebaseio.com/${myEmail}.json`);
+            const reponse=await fetch(`https://mailclient-9b956-default-rtdb.firebaseio.com/${myEmail}}.json`);
 
             const mailData=await reponse.json();
             console.log('useEffectcalled', mailData);
