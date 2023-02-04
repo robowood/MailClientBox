@@ -8,6 +8,20 @@ const Inbox = () => {
     const mailInInbox=useSelector(state=>state.mail.mails);
     const myEmail=localStorage.getItem('email');
 
+
+
+
+    const deleteHandler=async(id)=>{
+        const response= await fetch(`https://book-search-app-62511-default-rtdb.firebaseio.com/inbox/${myEmail}/${id}.json`,{
+            method:'DELETE'
+        })  
+        const deleteData=await response.json();
+        setreRender((prev)=>!prev)
+        console.log('deleteddddddInbox');
+    
+        }
+    
+
     let data=[];
 
     useEffect(()=>{
@@ -28,19 +42,30 @@ const Inbox = () => {
     console.log(data,'data');
   return (
     <div className={classes.main}>
-        <div className={classes.row}>
-            {
+    {mailInInbox.length>0 ?
+(<div className={classes.row}>
+         {
+             mailInInbox.map((item)=>(
+                 <div className={classes.row1} key={item.id}>
+                 <div className={classes.user}>From :- {item.sender}</div>
+         <div className={classes.subject}>{item.subject}</div>
+         <div className={classes.msg}>
+             <NavLink to={`/message/${item.id}`} style={{textDecoration:'none'}}>{'{message}'}</NavLink>
+         </div>
+        {item.dot && <div className={classes.dot}>
+         {/* //dot logic */}
+         </div>}
+         <div className={classes.delete}>
+             <button onClick={deleteHandler.bind(null,item.id)}>Delete</button>
+         </div>
+         </div>
+             ))
 
-                mailInInbox.map((item)=>(
-                    <div className={classes.row1} key={item.id}>
-                    <div className={classes.user}>{item.sender}</div>
-            <div className={classes.subject}>{item.subject}</div>
-            </div>
-                ))
+         }
+     </div>) : <p>Inbox is empty</p>}
+    
+ </div>
+)
 
-            }
-        </div>
-    </div>
-  )
 }
 export default Inbox;
