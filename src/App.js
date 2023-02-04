@@ -5,17 +5,19 @@ import Welcome from './components/pages/Welcome'
 import { useSelector } from 'react-redux'
 import ForgetPassword from './components/pages/ForgetPassword';
 import Send from './components/Email/Send'
+import Inbox from './components/Email/Inbox';
 function App() {
-  const isAuth=useSelector(state=>state.auth.isAuthnticated)
+  const isAuth=useSelector(state=>state.auth.isAuthnticate)
   return (
-    <Fragment>
-      <Send/>
-    <Routes>
-    {/* <Route path='/' element={isAuth ? <Welcome /> : <SingUp />}></Route>
-    <Route path='/welcome' element={!isAuth ? <Welcome /> : <SingUp />} />
-    {/* <Route path='/forgotPassword' element={!isAuth ? <ForgetPassword /> : <Welcome />} />   */}
-    </Routes> 
-    </Fragment>
+    <Inbox/>
+    // <Fragment>
+    //   <Routes>
+    //   <Route path='/' element={isAuth ? <Welcome /> : <SingUp />}></Route>
+    //   <Route path='/forgotPassword' element={!isAuth ? <ForgetPassword /> : <Welcome />} />
+    //   <Route path='/send' element={isAuth ? <Send /> : <SingUp />} /> 
+    //   </Routes>
+
+    // </Fragment>
 
 
   )
