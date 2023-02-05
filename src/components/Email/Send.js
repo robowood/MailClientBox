@@ -1,106 +1,110 @@
-// import { Fragment,useState } from "react";
-// import { Form,Button, Container, Card,FloatingLabel } from "react-bootstrap";
-// import { Editor } from "react-draft-wysiwyg";
-// import { EditorState } from 'draft-js';
-// import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
+import Button from 'react-bootstrap/Button';
+import Form from 'react-bootstrap/Form';
+import classes from './Send.module.css'
+import { Editor } from "react-draft-wysiwyg";
+import { EditorState } from 'draft-js';
 
+import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 
-// const Send=()=>{
-//     const [email,setEmail]=useState('');
-//     const [subject,setSubject]=useState('');
-//      const [editorState , setEditorState] = useState(()=> EditorState.createEmpty() )
+import React, { Fragment, useState } from 'react'
 
+const Send = () => {
 
-//     const emailChangeHandler=(e)=>{
-//         setEmail(e.target.value)
-//     }
-//     const subjectChangeHandler=(e)=>{
-//         setSubject(e.target.value)
-//         console.log(e.target.value);
-//     }
-//      const editorHandler=(editorState)=>{
-//          setEditorState(editorState)
-//     //  //    console.log(editorState.getCurrentContent().getPlainText(),'editorState');
- 
-//       }
-//     const submitHandler=(e)=>{
-//         e.preventDefault();
+    const [editorState , setEditorState] = useState(()=> EditorState.createEmpty() )
+
+    const [email,setEmail]=useState('');
+    const [subject,setSubject]=useState('');
+
+    const EmailchangeHandler=(e)=>{
+        setEmail(e.target.value);
+    }
+
+const SubjectchangeHandler=(e)=>{
+    setSubject(e.target.value);
+}
+
+    const editorHandler=(editorState)=>{
+       setEditorState(editorState)
+    //    console.log(editorState.getCurrentContent().getPlainText(),'editorState');
     
-// const sender=localStorage.getItem('email');
-// const receiver=email.replace(/['@','.']/g,'');
-// console.log(sender,receiver);
+    }
+    const submitHandler=(e)=>{
+        e.preventDefault();
+        const sender=localStorage.getItem('email');
+        const sender1=sender.replace(/[@.]/g,'');
+        const receiver=email.replace(/['@','.']/g,'');
+       // console.log(sender,receiver);
+       fetch(`https://mailclient-9b956-default-rtdb.firebaseio.com/sentbox/${sender1}.json`,{
+        method:'POST',
+        body:JSON.stringify({
+            to:email,
+            subject:subject,
+            message:editorState.getCurrentContent().getPlainText()
+           
+        }),
+        headers:{
+            'Content-Type':'application/json'
+        }
+       }).then((res)=>{
+        if(!res.ok){
+            alert(res.error.message)
+        }else{
+            console.log('successfull');
+            console.log(sender1);
+        }
+       })
+       fetch(`https://mailclient-9b956-default-rtdb.firebaseio.com/inbox/${receiver}.json`,{
+        method:'POST',
+        body:JSON.stringify({
+            sender:sender,
+            subject:subject,
+            message:editorState.getCurrentContent().getPlainText(),
+            dot:true
+        }),
+        headers:{
+            'Content-Type':'application/json'
+        }
+       }).then((res)=>{
+        if(!res.ok){
+            alert(res.error.message)
+        }else{
+            console.log('successfull');
+        }
+       })
+    }
 
-
-// fetch(`https://mailclient-9b956-default-rtdb.firebaseio.com/${sender}.json`,{
-//     method:'POST',
-//     body:JSON.stringify({
-//         subject:subject,
-//         message:editorState.getCurrentContent().getPlainText()
-//     }),
-//     headers:{
-//         'Content-Type':'application/json'
-//     }
-
-// }).then((res)=>{
-// if(!res.ok){
-//     console.log(res.error);
-// }
-// else{
-//     console.log("send email successfully");
-// }
-// })
-
-// fetch(`https://mailclient-9b956-default-rtdb.firebaseio.com/${receiver}.json`,{
-//     method:'POST',
-//     body:JSON.stringify({
-//         subject:subject,
-//         message:editorState.getCurrentContent().getPlainText()
-//     }),
-//     headers:{
-//         'Content-Type':'application/json'
-//     }
-
-// }).then((res)=>{
-// if(!res.ok){
-//     console.log(res.error);
-// }
-// else{
-//     console.log("send email successfully");
-// }
-// })
-// }
-
-//     return(
-//         <Container className=" shadow-lg pt-3" style={{backgroundColor:'bisque'}} >
-//             <Card >       
-//             <Form style={{backgroundColor:'bisque',height: '530px' }}
-//   onSubmit={submitHandler}>
-//         <Form.Group className="mb-3" controlId="formBasicEmail">
-//           <Form.Label>To</Form.Label>
-//           <Form.Control type="email" placeholder="Enter email" name={email} onChange={emailChangeHandler} />
-//         </Form.Group>
-  
-//         <Form.Group className="mb-4" controlId="formBasicPassword">
-//           <Form.Label>subject</Form.Label>
-//           <Form.Control type="text" placeholder="enter subject"  name={subject} onChange={subjectChangeHandler}/>
-//         </Form.Group>
+  return (
+    <Fragment>
+        <div className={classes.main}>
+        <Form className={`${classes.To}`} onSubmit={submitHandler} >
+      <Form.Group className="mb-3" controlId="formBasicEmail">
+        <Form.Label>To</Form.Label>
+        <Form.Control type="email" placeholder="Enter email" value={email} onChange={EmailchangeHandler} />
         
+      </Form.Group>
+
+      <Form.Group className="mb-3" controlId="formBasicPassword">
+        <Form.Label>Subject</Form.Label>
+        <Form.Control type="text" value={subject} onChange={SubjectchangeHandler} />
+      </Form.Group>
       
-//       <Card style={{height:'300px'}}>   <Editor className="mb-5"
-//               editorState={editorState}
-//               onEditorStateChange={editorHandler}
-//             />
-// </Card>
+      <Button variant="primary" type="submit">
+        Send
+      </Button>
+    </Form>
 
-//         <Button variant="primary" type="submit">
-//           Send
-//         </Button>
+<div className={classes.editor}>
+    <Editor 
+            editorState={editorState}
+            onEditorStateChange={editorHandler}
+            />
+</div>
 
-//       </Form>
-//       </Card>
 
-//       </Container>
-  
-//     );
-// }
-// export default Send;
+        </div>
+
+    </Fragment>
+  )
+}
+
+export default Send

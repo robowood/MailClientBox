@@ -1,28 +1,10 @@
-// import { createSlice } from "@reduxjs/toolkit"
-
-
-// const initialAuthState={
-//     mails:[]
-// }
-
-// const mailSlice=createSlice({
-//     name:'mail',
-//     initialState:initialAuthState,
-//     reducers:{
-//         mailSliceAction(state){
-//          state.mails=action.payload
-//         }
-//     }
-// })
-
-// export const mailAction=mailSlice.actions;
-// export default mailSlice.reducer
-
 import { createSlice } from "@reduxjs/toolkit"
 
 
 const initialEmailState={
     mails:[],
+    sendMails:[],
+    unRead:0
 }
 
 const mailSlice=createSlice({
@@ -31,10 +13,14 @@ const mailSlice=createSlice({
     reducers:{
         updateInbox(state,action){
             state.mails=action.payload
+        }, updateSentbox(state,action){
+            state.sendMails=action.payload
+        },
+        updateUnread(state,action){
+            state.unRead=action.payload
         }
     }
 });
 
 export const mailSliceAction=mailSlice.actions;
 export default mailSlice.reducer
- 
